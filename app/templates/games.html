@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <section class="filters">
+
+    </section>
+    <section class="games">
+        {% for game in games_list %}
+        <p>
+            {{ game.name }} with price: {{ game.price }} $
+        </p>
+        <a href="{{ url_for('game', gamename=game.name) }}"><span>buy</span></a>
+        {% endfor %}
+    </section>
+    
+{% endblock %}

@@ -20,24 +20,16 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-class Clothes_good(db.Model):
-    __tablename__ = 'Clothes_Goods'
-    id = db.Column(db.Integer, primary_key = True)
-    name = db.Column(db.String(45), index = True, unique=True)
-    descreption = db.Column(db.String(120), index = True)
-    price = db.Column(db.Float, index=True)
-    size = db.Column(db.String(10), index = True)
-    matherial = db.Column(db.String(75), index = True)
-    
-    def __repr__(self) -> str:
-        return 'name: {self.name}, price: {self.price}'
-
-class Food_good(UserMixin, db.Model):
-    __tablename__ = 'Food_Goods'
+class Game(UserMixin, db.Model):
+    __tablename__ = 'Game'
     id = db.Column(db.Integer, primary_key = True)
     name = db.Column(db.String(40), index = True, unique=True)
     descreption = db.Column(db.String(80), index = True)
     price = db.Column(db.Float, index=True)
+    developer = db.Column(db.String)
+    publisher = db.Column(db.String)
+    release_date = db.Column(db.Date)
+
     
     def __repr__(self) -> str:
         return f'name: {self.name}, price: {self.price}'

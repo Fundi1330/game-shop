@@ -2,10 +2,9 @@ from flask import Flask, render_template, flash, redirect, request, url_for
 from app.models import db
 from flask_migrate import Migrate
 
-# from datetime import datetime
 from flask_login import LoginManager, current_user, login_user, logout_user, login_required
-from app.forms import RegestrationForm, LoginForm, AddGoodForm
-from app.models import User, Food_good, Clothes_good
+from app.forms import RegestrationForm, LoginForm, AddGameForm
+from app.models import User, Game
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = '1234'
@@ -20,24 +19,11 @@ migrate = Migrate(app, db)
 login = LoginManager(app)
 
 
-"""Таблиці для БД"""
-
-
-
-# class Post(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     body = db.Column(db.String(140))
-#     time = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-#     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
-#     def __repr__(self):
-#         return '<Post {}'.format(self.body)
-
 
 """Декоратори для відображення сторінок та їх вмісту"""
-@app.before_first_request
-def create_tables():
+with app.app_context():
     db.create_all()
+
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
@@ -86,52 +72,36 @@ def register():
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
-@app.route('/user/<username>')
+@app.route('/cart/<username>')
 @login_required
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
-    return render_template('user.html', user=user)
+    return render_template('cart.html', title='Cart', user=user)
 
-@app.route('/good/<goodname>')
+@app.route('/game/<gamename>')
 @login_required
-def good(goodname):
-    good = Food_good.query.filter_by(name=goodname).first()
-    clothes = False
-    if good:
-        pass
-    else:
-        good = Clothes_good.query.filter_by(name=goodname).first()
-        clothes = True
+def game(gamename):
+    game = Game.query.filter_by(name=gamename).first()
     
-    return render_template('good.html', good=good, clothes=clothes)
+    
+    return render_template('game.html', title=game.name, game=game)
 
-@app.route('/food')
+@app.route('/games')
 @login_required
-def food():
-    food_list = Food_good.query.all()
-    return render_template('food.html', title='Food', food_list=food_list)
+def games():
+    games_list = Game.query.all()
+    return render_template('games.html', title='Game', games_list=games_list)
 
-@app.route('/clothes')
-@login_required
-def clothes():
-    clothes_list = Clothes_good.query.all()
-    return render_template('clothes.html', title='Clothes', clothes_list=clothes_list)
 
-@app.route('/add_good', methods=["GET", "POST"])
+@app.route('/add_game', methods=["GET", "POST"])
 def add_good():
-    form = AddGoodForm()
+    form = AddGameForm()
     if form.validate_on_submit():
-        flash('Good succefully added to DataBase')
-        good = None
-        radio = request.form['options']
-        if radio == 'food':
-            good = Food_good(name=form.name.data, descreption=form.descreption.data,
-            price=form.price.data)
-        else:
-            good = Clothes_good(name=form.name.data, descreption=form.descreption.data,
-            price=form.price.data, size=form.size.data, matherial=form.matherial.data)
+        flash('Game succefully added to DataBase')
+        game = Game(name=form.name.data, descreption=form.descreption.data, price=form.price.data,
+                     developer=form.developer.data, publisher=form.publisher.data, release_date=form.release_date.data)
             
 
-        db.session.add(good)
+        db.session.add(game)
         db.session.commit()
-    return render_template('add_good.html', title='Add good', form=form)
+    return render_template('add_game.html', title='Add game', form=form)

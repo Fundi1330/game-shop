@@ -1,0 +1,51 @@
+/* --------------------------------- imports -------------------------------- */
+@import url('https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300&family=Ubuntu&display=swap');
+/* --------------------------------- styles --------------------------------- */
+* {
+    margin: 0px;
+    padding: 0px;
+    box-sizing: border-box;
+}
+body {
+    background-color: #0a4e9c;
+    font-size: x-large;
+    font-family: 'Nunito Sans', sans-serif;
+}
+.menu > a {
+    color: #FDC500;
+    margin-left: .75rem;
+}
+.menu {
+    line-height: 5rem;
+    height: 5rem;
+    background-color: #00296B;
+    font-size: 1.375rem;
+    text-align: center;
+    vertical-align: baseline;
+}
+a {
+    text-decoration: none;
+}
+.main {
+    text-align: center;
+}
+a, p, h1, h2, h3, h4, h5, h6 {
+    color: #75e434;
+}
+.main {
+    margin-left: 130px;
+    margin-right: 130px;
+}
+button, input[type=submit] {
+    padding: .5rem;
+    border: 2px solid #0e0bc4;
+    background-color: #1814d3;
+    color: #f0e4e4;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all .2s;
+    margin-top: .5rem;
+}
+button:hover, input[type=submit]:hover {
+    background-color: #1c1ac2;
+}

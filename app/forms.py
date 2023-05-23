@@ -1,11 +1,10 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, DateField, TextAreaField, IntegerField
 from wtforms.validators import DataRequired, Email, EqualTo
 from app.models import User
 from flask import flash
 
 
-"""Форми на сайті"""
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
@@ -31,10 +30,11 @@ class RegestrationForm(FlaskForm):
             flash('Use a different email')
 
 
-class AddGoodForm(FlaskForm):
-    name = StringField('Good name', validators=[DataRequired()])
-    descreption = StringField('Good descreption', validators=[DataRequired()])
-    price = StringField('Good price', validators=[DataRequired()])
-    size = StringField('Size')
-    matherial = StringField('Matherial')
-    submit = SubmitField('Add good')
+class AddGameForm(FlaskForm):
+    name = StringField('Game name', validators=[DataRequired()])
+    descreption = TextAreaField('Game descreption', validators=[DataRequired()])
+    price = IntegerField('Game price', validators=[DataRequired()])
+    developer = StringField('Game developer', validators=[DataRequired()])
+    publisher = StringField('Game publisher', validators=[DataRequired()])
+    release_date = DateField('Game release date', validators=[DataRequired()])
+    submit = SubmitField('Add game')

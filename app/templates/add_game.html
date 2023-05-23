@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h2>Add good</h2>
+    <h2>Add game</h2>
     <form action="" method="post" novalidate>
         {{ form.hidden_tag() }}
         <p>
@@ -25,23 +25,27 @@
                 <span style="color: red;">[{{error}}]</span>
             {% endfor %}
         </p>
-        <p>For clothes good</p>
         <p>
-            {{ form.size.label }}<br>
-            {{ form.size(size=48)}}
-            {% for error in form.size.errors %}
+            {{ form.developer.label }}<br>
+            {{ form.developer(size=48)}}
+            {% for error in form.developer.errors %}
                 <span style="color: red;">[{{error}}]</span>
             {% endfor %}
         </p>
         <p>
-            {{ form.matherial.label }}<br>
-            {{ form.matherial(size=48)}}
-            {% for error in form.matherial.errors %}
+            {{ form.publisher.label }}<br>
+            {{ form.publisher(size=48)}}
+            {% for error in form.publisher.errors %}
                 <span style="color: red;">[{{error}}]</span>
             {% endfor %}
         </p>
-        <input type="radio" name="options" id="food" value="food"> Food <br>
-        <input type="radio" name="options" id="clothes" value="clothes"> Clothes
+        <p>
+            {{ form.release_date.label }}<br>
+            {{ form.release_date(size=48)}}
+            {% for error in form.release_date.errors %}
+                <span style="color: red;">[{{error}}]</span>
+            {% endfor %}
+        </p>
         <p>{{ form.submit() }}</p>
     </form>
 {% endblock %}

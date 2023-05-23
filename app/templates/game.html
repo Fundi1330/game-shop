@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <p>Name: {{ game.name }}</p>
+    <p>Price: {{ game.price }}</p>
+    <p>Description: {{ game.descreption}} </p>
+    <p>Developer: {{ game.developer }}</p>
+    <p>Publisher: {{ game.publisher }}</p>
+    <p>Release date: {{ game.release_date }}</p>
+    <form action="" method="post">
+        <input type="submit" value="add" name="add">
+    </form>
+{% endblock %}
