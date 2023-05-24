@@ -86,11 +86,20 @@ def game(gamename):
     
     return render_template('game.html', title=game.name, game=game)
 
-@app.route('/games')
+@app.route('/games', methods=['GET', 'POST'])
 @login_required
 def games():
     games_list = Game.query.all()
-    return render_template('games.html', title='Game', games_list=games_list)
+
+    if request.method == 'POST':
+        new_game_list = []
+        checkboxes = request.form.getlist('developer')
+        for i in games_list:
+            if i.developer in checkboxes:
+                new_game_list.append(i)
+        return render_template('games.html', title='Game', games_list=new_game_list, developers=games_list)
+
+    return render_template('games.html', title='Game', games_list=games_list, developers=games_list)
 
 
 @app.route('/add_game', methods=["GET", "POST"])
@@ -105,3 +114,6 @@ def add_good():
         db.session.add(game)
         db.session.commit()
     return render_template('add_game.html', title='Add game', form=form)
+
+
+    # ----------------------------------- ajax ----------------------------------- #

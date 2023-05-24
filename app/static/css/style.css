@@ -49,3 +49,15 @@ button, input[type=submit] {
 button:hover, input[type=submit]:hover {
     background-color: #1c1ac2;
 }
+.games {
+    display: flex;
+}
+.games > section {
+    display: inline;
+}
+.filters {
+    width: 45%;
+}
+.btn-author {
+    float: left;
+}

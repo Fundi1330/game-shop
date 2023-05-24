@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, DateField, TextAreaField, IntegerField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, DateField, TextAreaField, FloatField
 from wtforms.validators import DataRequired, Email, EqualTo
 from app.models import User
 from flask import flash
@@ -33,7 +33,7 @@ class RegestrationForm(FlaskForm):
 class AddGameForm(FlaskForm):
     name = StringField('Game name', validators=[DataRequired()])
     descreption = TextAreaField('Game descreption', validators=[DataRequired()])
-    price = IntegerField('Game price', validators=[DataRequired()])
+    price = FloatField('Game price', validators=[DataRequired()])
     developer = StringField('Game developer', validators=[DataRequired()])
     publisher = StringField('Game publisher', validators=[DataRequired()])
     release_date = DateField('Game release date', validators=[DataRequired()])
