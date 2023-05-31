@@ -8,20 +8,40 @@
             <h4>Developer</h4>
             <div class="author">
                 <form method="post">
-                    {% for game in developers %}
-                        <input type="checkbox" name="developer" id="{{ game.developer }}" value="{{ game.developer }}">
-                        <label for="{{ game.developer }}">{{ game.developer }}</label><br>
+                    {% for developer in developers %}
+                        <input type="checkbox" name="developer" id="{{ developer }}" value="{{ developer }}">
+                        <label for="{{ developer }}">{{ developer }}</label><br>
                     {% endfor %}
-                    <input type="submit" value="Filter!" id="btn-author">
+                    <input type="submit" name="filters" value="Filter!" id="btn-author">
+                </form>
+                <form method="post">
+                    {% for genre in genres %}
+                        <input type="checkbox" name="genre" id="{{ genre }}" value="{{ genre }}">
+                        <label for="{{ genre }}">{{ genre }}</label><br>
+                    {% endfor %}
+                    <input type="submit" name="filters" value="Filter" id="btn-author">
+                </form>
+                <form method="post">
+                    {% for star in range(1, 6) %}
+                        <input type="checkbox" name="stars" id="{{ star }}" value="{{ star }}">
+                        <label for="{{ star }}">{{ star }}</label><img src="{{ url_for('static', filename='images/star_checked.png')}}" alt="star" height="32"><br>
+                    {% endfor %}
+                    <input type="submit" name="filters" value="Rate!" id="btn-author">
                 </form>
             </div>
         </section>
         <section class="game_list">
             {% for game in games_list %}
+            {% if game.price == 0 %}
+            <p>
+                {{ game.name }} for free!
+            </p>
+            {% else %}
             <p>
                 {{ game.name }} with price: {{ game.price }} $
             </p>
-            <a href="{{ url_for('game', gamename=game.name) }}"><span>buy</span></a>
+            {% endif %}
+            <a href="{{ url_for('game', gamename=game.name) }}" class="buy-btn">buy</a>
             {% endfor %}
         </section>
     </div>

@@ -61,3 +61,43 @@ button:hover, input[type=submit]:hover {
 .btn-author {
     float: left;
 }
+.buy-btn {
+    padding: .0625rem;
+    border: 2px solid #70cc14;
+    background-color: #7aeb09;
+    color: #f0e4e4;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all .2s;
+    height: 12px;
+    font-size: 1rem;
+}
+.buy-btn {
+    background-color: #6cd306;
+}
+.game-in-cart {
+    text-align: left;
+    margin-top: .75rem;
+}
+.rate {
+    opacity: 0;
+}
+.rating {
+    background-image: url('../images/star.png');
+    content: '';
+    display: inline-block;
+    height: 2rem;
+    width: 2rem;
+    background-size: 100%;
+    cursor: pointer;
+}
+.review > * {
+    display: inline-block;
+}
+.author {
+    margin-right: .75rem;
+}
+.review {
+    min-height: 4.375rem;
+    /* text-align: center; */
+}

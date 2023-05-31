@@ -6,6 +6,8 @@ from flask_login import LoginManager, current_user, login_user, logout_user, log
 from app.forms import RegestrationForm, LoginForm, AddGameForm
 from app.models import User, Game
 
+from json import loads, dumps
+
 app = Flask(__name__)
 app.config["SECRET_KEY"] = '1234'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
@@ -65,41 +67,93 @@ def register():
     form = RegestrationForm()
     if form.validate_on_submit():
         flash("Congrats!")
-        user = User(username=form.username.data, email=form.email.data, password_hash=form.password.data)
+        user = User(username=form.username.data, email=form.email.data, password_hash=form.password.data, cart='')
         user.set_password(form.password.data)
         db.session.add(user)
         db.session.commit()
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
-@app.route('/cart/<username>')
+@app.route('/cart')
 @login_required
-def user(username):
-    user = User.query.filter_by(username=username).first_or_404()
-    return render_template('cart.html', title='Cart', user=user)
+def user():
+    user = current_user
+    cart = user.cart.split(',')
+    cart_with_items = []
 
-@app.route('/game/<gamename>')
+    for game in cart:
+        cart_with_items.append(Game.query.filter_by(name=game).first())
+
+    return render_template('cart.html', title='Cart', user=user, cart=cart_with_items)
+
+@app.route('/game/<gamename>', methods=['GET', 'POST'])
 @login_required
 def game(gamename):
     game = Game.query.filter_by(name=gamename).first()
+    ratings = loads(game.ratings)
     
+    if request.method == 'POST':
+        if request.form['go'] == 'Add!':
+            if not game.name in current_user.cart.split(','):
+                current_user.cart += f',{game.name}'
+                db.session.commit()
+            else:
+                flash('Game alredy in cart')
+        elif request.form['go'] == 'Write!':
+            checkboxes = request.form.getlist('rate')
+            data = request.form['message']
+            stars = len(checkboxes) + 1
+            ratings: list = loads(game.ratings)
+            ratings.append({
+                "text": data,
+                "stars": stars,
+                "author": current_user.username
+            })
+            game.ratings = dumps(ratings)
+            db.session.commit()
     
-    return render_template('game.html', title=game.name, game=game)
+    return render_template('game.html', title=game.name, game=game, ratings=ratings)
 
 @app.route('/games', methods=['GET', 'POST'])
 @login_required
 def games():
     games_list = Game.query.all()
 
-    if request.method == 'POST':
-        new_game_list = []
-        checkboxes = request.form.getlist('developer')
-        for i in games_list:
-            if i.developer in checkboxes:
-                new_game_list.append(i)
-        return render_template('games.html', title='Game', games_list=new_game_list, developers=games_list)
+    developers = []
+    
+    genres = []
 
-    return render_template('games.html', title='Game', games_list=games_list, developers=games_list)
+    for game in games_list:
+        developers.append(game.developer)
+        genres.append(game.genre)
+
+    
+    if request.method == 'POST':
+        if request.form['filters'] == 'Filter!':
+            new_game_list = []
+            checkboxes = request.form.getlist('developer')
+            for i in games_list:
+                if i.developer in checkboxes:
+                    new_game_list.append(i)
+
+            return render_template('games.html', title='Games', games_list=new_game_list, developers=set(developers), genres=set(genres))
+        elif request.form['filters'] == 'Filter':
+            games_sorted = []
+            genre_checkboxes = request.form.getlist('genre')
+            for j in games_list:
+                if j.genre in genre_checkboxes:
+                    games_sorted.append(j)
+            return render_template('games.html', title='Games', games_list=games_sorted, developers=set(developers), genres=set(genres))
+        elif request.form['filters'] == 'Rate!':
+            sorted_games = []
+            stars_checkboxes = request.form.getlist('stars')
+            stars_checkboxes = [int(x) for x in stars_checkboxes]
+            for game in games_list:
+                for rate in loads(game.ratings):
+                    if rate['stars'] in stars_checkboxes:
+                        sorted_games.append(game)
+            return render_template('games.html', title='Games', games_list=set(sorted_games), developers=set(developers), genres=set(genres))
+    return render_template('games.html', title='Games', games_list=games_list, developers=set(developers), genres=set(genres))
 
 
 @app.route('/add_game', methods=["GET", "POST"])
@@ -114,6 +168,3 @@ def add_good():
         db.session.add(game)
         db.session.commit()
     return render_template('add_game.html', title='Add game', form=form)
-
-
-    # ----------------------------------- ajax ----------------------------------- #

@@ -2,12 +2,41 @@
 
 {% block content %}
     <p>Name: {{ game.name }}</p>
+    {% if game.price == 0.0 %}
+        <p>Price: free!</p>
+    {% else %}
     <p>Price: {{ game.price }}</p>
+    {% endif %}
     <p>Description: {{ game.descreption}} </p>
     <p>Developer: {{ game.developer }}</p>
     <p>Publisher: {{ game.publisher }}</p>
     <p>Release date: {{ game.release_date }}</p>
-    <form action="" method="post">
-        <input type="submit" value="add" name="add">
+    <form method="post">
+        <input type="submit" value="Add!" name="go">
     </form>
+    <section class="ratings">
+        <form method="post">
+            <input type="checkbox" name="rate" id="one" class="rate">
+            <label for="one" class="rating"></label>
+            <input type="checkbox" name="rate" id="two" class="rate">
+            <label for="two" class="rating"></label>
+            <input type="checkbox" name="rate" id="three" class="rate">
+            <label for="three" class="rating"></label>
+            <input type="checkbox" name="rate" id="four" class="rate">
+            <label for="four" class="rating"></label>
+            <input type="checkbox" name="rate" id="five" class="rate">
+            <label for="five" class="rating"></label>
+            <textarea name="message" id="message"></textarea>
+            <input type="submit" value="Write!" name="go">
+        </form>
+        {% for rate in ratings %}
+            <div class="review">
+                <p class="author">{{ rate.author }}</p>
+                <p class="text">{{ rate.text }}</p>
+                <p class="stars">{{ rate.stars }}</p>
+                <img src="{{ url_for('static', filename='images/star_checked.png')}}" alt="star" height="32">
+            </div>
+        {% endfor %}
+    </section>
+    <script src="{{ url_for('static', filename='js/rating.js') }}"></script>
 {% endblock %}

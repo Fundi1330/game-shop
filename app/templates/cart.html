@@ -1,12 +1,20 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<tabel>
-   <tr valign="top">
-      <td></td>
-     <td>
-         <p>This is your cart</p>
-         <p>there are your games:</p>
-   </tr>
-</tabel>
+<p>This is your cart</p>
+<p>there are your games:</p>
+<div class="cart">
+   {% for game in cart %}
+   <div class="game-in-cart">
+         <p>Name: {{ game.name }}</p>
+         {% if game.price == 0.0 %}
+            <p>Price: free!</p>
+         {% else %}
+         <p>Price: {{ game.price }}</p>
+         {% endif %}
+         <p>Description: {{ game.descreption}} </p>
+         <a href="#" class="buy-btn">buy</a>
+   </div>
+   {% endfor %}
+</div>
 {% endblock %}
