@@ -32,6 +32,9 @@
         </section>
         <section class="game_list">
             {% for game in games_list %}
+                {% if game.images %}
+                    <img src="{{ url_for('static', filename='images/games/') }}{{ game.images.split(',')[-1] }}" alt="game image">
+                {% endif %}
             {% if game.price == 0 %}
             <p>
                 {{ game.name }} for free!
@@ -45,5 +48,4 @@
             {% endfor %}
         </section>
     </div>
-    <script src="{{ url_for('static', filename='js/filters.js') }}"></script>
 {% endblock %}

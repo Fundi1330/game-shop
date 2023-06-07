@@ -33,6 +33,7 @@ class Game(UserMixin, db.Model):
     release_date = db.Column(db.Date)
     genre = db.Column(db.String)
     ratings = db.Column(db.String, default='[]')
+    images = db.Column(db.String, default='')
     
     def __repr__(self) -> str:
         return f'name: {self.name}, price: {self.price}'

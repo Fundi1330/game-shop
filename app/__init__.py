@@ -6,12 +6,15 @@ from flask_login import LoginManager, current_user, login_user, logout_user, log
 from app.forms import RegestrationForm, LoginForm, AddGameForm
 from app.models import User, Game
 
+from os import getcwd, path
+
 from json import loads, dumps
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = '1234'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['UPLOAD_FOLDER'] =  path.join(app.root_path + '\\static\\images\\games\\')
 
 app.app_context().push()
 
@@ -94,8 +97,11 @@ def game(gamename):
     
     if request.method == 'POST':
         if request.form['go'] == 'Add!':
-            if not game.name in current_user.cart.split(','):
+            if not game.name in current_user.cart.split(',') and current_user.cart != '':
                 current_user.cart += f',{game.name}'
+                db.session.commit()
+            elif current_user.cart == '':
+                current_user.cart += f'{game.name}'
                 db.session.commit()
             else:
                 flash('Game alredy in cart')
@@ -157,13 +163,21 @@ def games():
 
 
 @app.route('/add_game', methods=["GET", "POST"])
-def add_good():
+def add_game():
     form = AddGameForm()
     if form.validate_on_submit():
         flash('Game succefully added to DataBase')
+        images = request.files.getlist('images')
+        game_images = ''
+        for image in images:
+            if game_images == '':
+                game_images += image.filename
+            else:
+                game_images += f',{image.filename}'
+            image.save(app.config['UPLOAD_FOLDER'] + image.filename)
         game = Game(name=form.name.data, descreption=form.descreption.data, price=form.price.data,
-                     developer=form.developer.data, publisher=form.publisher.data, release_date=form.release_date.data)
-            
+                     developer=form.developer.data, publisher=form.publisher.data, 
+                    release_date=form.release_date.data, genre=form.genre.data, images=game_images)
 
         db.session.add(game)
         db.session.commit()

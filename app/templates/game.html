@@ -1,6 +1,19 @@
 {% extends 'base.html' %}
 
 {% block content %}
+    {% if game.images %}
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css"/>
+        <div class="swiper">
+            <div class="swiper-wrapper">
+                {% for img in game.images.split(',') %}
+                    <div class="swiper-slide"><img src="{{ url_for('static', filename='images/games/') }}{{ img }}" alt="game img"></div>
+                {% endfor %}
+            </div>
+            <div class="swiper-button-prev"></div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-pagination"></div>
+        </div>
+    {% endif %}
     <p>Name: {{ game.name }}</p>
     {% if game.price == 0.0 %}
         <p>Price: free!</p>
@@ -39,4 +52,28 @@
         {% endfor %}
     </section>
     <script src="{{ url_for('static', filename='js/rating.js') }}"></script>
+    <script type="module">
+        import Swiper from 'https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.esm.browser.min.js'
+      
+        const swiper = new Swiper('.swiper', {
+            direction: 'horizontal',
+            loop: true,
+            autoplay: {
+                delay: 4000,
+                pauseOnMouseEnter: true
+            },
+            pagination: {
+                el: '.swiper-pagination'
+            },
+            speed: 400,
+            spaceBetween: 100,
+            cssMode: true,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev'
+            }
+        });
+
+        
+    </script>
 {% endblock %}
